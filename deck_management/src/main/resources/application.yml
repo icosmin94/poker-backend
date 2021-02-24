@@ -1,0 +1,10 @@
+server:
+  port: 8100
+  servlet:
+    context-path: /deck-management
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/auth/realms/poker_backend/protocol/openid-connect/certs
