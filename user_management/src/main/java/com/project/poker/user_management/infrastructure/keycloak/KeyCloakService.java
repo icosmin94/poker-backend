@@ -41,6 +41,6 @@ public class KeyCloakService {
                 .uri(uriBuilder -> uriBuilder.path(USER_URI).queryParams(options).build())
                 .retrieve()
                 .onStatus(HttpStatus::isError, ExceptionUtils::throwException)
-                .bodyToMono(new ParameterizedTypeReference<>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<UserRepresentation>>() {});
     }
 }

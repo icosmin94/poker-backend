@@ -22,6 +22,21 @@ spring:
             user-info-uri: http://localhost:8080/auth/realms/poker_backend/protocol/openid-connect/userinfo
             user-name-attribute: sub
             jwk-set-uri: http://localhost:8080/auth/realms/poker_backend/protocol/openid-connect/certs
+  datasource:
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 30
+      idle-timeout: 6000011
+      minimum-idle: 10
+      pool-name: UserManagementDatabasePool
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/deck_management
+    username: user_management
+    password: user_management
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
 keycloak:
   url: http://localhost:8080/auth/admin/realms/poker_backend/
