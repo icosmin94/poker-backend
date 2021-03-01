@@ -9,3 +9,29 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8080/auth/realms/poker_backend/protocol/openid-connect/certs
+      client:
+        registration:
+          keycloak:
+            client-id: admin-cli
+            client-secret: 01635fa6-f70e-434f-aedb-36578be7295f
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            authorization-uri: http://localhost:8080/auth/realms/master/protocol/openid-connect/auth
+            token-uri: http://localhost:8080/auth/realms/master/protocol/openid-connect/token
+            user-info-uri: http://localhost:8080/auth/realms/master/protocol/openid-connect/userinfo
+            user-name-attribute: sub
+            jwk-set-uri: http://localhost:8080/auth/realms/master/protocol/openid-connect/certs
+
+keycloak:
+  url: http://localhost:8080/auth/admin/realms/poker_backend/
+  connectionPoolMaxSize: 5
+  connectionConnectTimeoutSec: 5
+  connectionReadTimeoutSec: 5
+  idleTimeoutSec: 15
+
+logging:
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
+    reactor.netty.http.client: DEBUG
+

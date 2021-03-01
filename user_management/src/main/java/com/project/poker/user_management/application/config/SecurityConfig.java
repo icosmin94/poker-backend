@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.project.poker.user_management.api.UserController.REGISTER_USER_URI;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -28,11 +29,10 @@ public class SecurityConfig {
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
-        var testUrl = serverProperties.getServlet().getContextPath() + "/test";
+        var registerUserUrl = serverProperties.getServlet().getContextPath() + REGISTER_USER_URI;
         var serverWebExchangeMatchers = new ArrayList<ServerWebExchangeMatcher>();
-        serverWebExchangeMatchers.add(ServerWebExchangeMatchers.pathMatchers(testUrl));
-
-
+        serverWebExchangeMatchers.add(ServerWebExchangeMatchers.pathMatchers(registerUserUrl));
+        
         http
                 .securityMatcher(negate(serverWebExchangeMatchers))
                 .authorizeExchange(exchanges -> exchanges

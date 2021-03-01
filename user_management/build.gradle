@@ -1,7 +1,21 @@
-plugins {
-    id 'org.springframework.boot' version '2.4.3'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
+buildscript{
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.4.2")
+    }
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.4.2"
+    }
 }
 
 group = 'com.project.poker'
