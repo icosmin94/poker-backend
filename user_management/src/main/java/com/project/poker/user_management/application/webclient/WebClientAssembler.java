@@ -18,14 +18,12 @@ public class WebClientAssembler {
     }
 
     public static ClientHttpConnector getClientHttpConnector(WebClientProperties webClientProperties) {
-        HttpClient httpClient = HttpClient.create()
-                .tcpConfiguration(tcpClient -> {
-                    tcpClient = tcpClient.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,
-                            webClientProperties.getConnectionConnectTimeoutSec() * 1_000);
-                    tcpClient = tcpClient.doOnConnected(conn -> conn
-                            .addHandlerLast(new ReadTimeoutHandler(webClientProperties.getConnectionReadTimeoutSec(), TimeUnit.SECONDS)));
-                    return tcpClient;
-                });
+        HttpClient httpClient = HttpClient.create();
+
+        httpClient.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, webClientProperties.getConnectionConnectTimeoutSec() * 1_000);
+        httpClient.doOnConnected(conn -> conn
+                .addHandlerLast(new ReadTimeoutHandler(webClientProperties.getConnectionReadTimeoutSec(), TimeUnit.SECONDS)));
+
         return new ReactorClientHttpConnector(httpClient);
     }
 }
