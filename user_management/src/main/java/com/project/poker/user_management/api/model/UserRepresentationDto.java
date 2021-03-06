@@ -1,4 +1,4 @@
-package com.project.poker.user_management.infrastructure.keycloak;
+package com.project.poker.user_management.api.model;
 
 import com.project.poker.user_management.infrastructure.util.CustomJsonSerializable;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRepresentation implements CustomJsonSerializable {
+public class UserRepresentationDto implements CustomJsonSerializable {
     private String id;
     private String email;
     private boolean enabled;
     private String firstName;
     private String lastName;
     private String username;
+    private String password;
 }

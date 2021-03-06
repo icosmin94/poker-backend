@@ -13,7 +13,7 @@ spring:
         registration:
           keycloak:
             client-id: user-management
-            client-secret: a15ca879-9700-4354-b443-5af76c4324db
+            client-secret: 2ef5d124-4eac-4b7e-be14-cf9652953ae7
             authorization-grant-type: client_credentials
         provider:
           keycloak:

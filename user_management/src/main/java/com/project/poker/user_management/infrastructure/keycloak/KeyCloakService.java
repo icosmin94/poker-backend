@@ -1,6 +1,10 @@
 package com.project.poker.user_management.infrastructure.keycloak;
 
+import com.project.poker.user_management.api.model.UserRepresentationDto;
 import com.project.poker.user_management.application.exception.ExceptionUtils;
+import com.project.poker.user_management.application.mapper.UserRepresentationMapper;
+import com.project.poker.user_management.infrastructure.keycloak.model.UpdateUserCommand;
+import com.project.poker.user_management.infrastructure.keycloak.model.UserRepresentation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -20,11 +24,32 @@ import java.util.List;
 public class KeyCloakService {
 
     private static final String USER_URI = "/users";
+    private static final String SET_PASSWORD_URI = "/users/{userId}/reset-password";
 
     private final WebClient keyCloakWebClient;
 
-    public Mono<Void> createUser(UserRepresentation userRepresentation) {
+    public Mono<Void> createUser(UserRepresentationDto userRepresentationDto) {
 
+        UserRepresentation userRepresentation = UserRepresentationMapper.toUserRepresentation(userRepresentationDto);
+        UpdateUserCommand updateUserCommand = UpdateUserCommand
+                .anUpdatePasswordCommand(userRepresentationDto.getPassword());
+
+        return postUserToKeyCloak(userRepresentation)
+                .then(Mono.defer(() -> getAllUsersByUserName(userRepresentation.getUsername())
+                                        .flatMap(users -> updatePassword(updateUserCommand,
+                                                users.get(0).getId()))));
+    }
+
+    public Mono<Void> updatePassword(UpdateUserCommand updateUserCommand,  String userId) {
+        return keyCloakWebClient.put()
+                .uri(uriBuilder -> uriBuilder.path(SET_PASSWORD_URI).build(userId))
+                .body(BodyInserters.fromValue(updateUserCommand))
+                .retrieve()
+                .onStatus(HttpStatus::isError, ExceptionUtils::throwException)
+                .bodyToMono(Void.class);
+    }
+
+    public Mono<Void> postUserToKeyCloak(UserRepresentation userRepresentation) {
         return keyCloakWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path(USER_URI).build())
                 .body(BodyInserters.fromValue(userRepresentation))
@@ -33,7 +58,7 @@ public class KeyCloakService {
                 .bodyToMono(Void.class);
     }
 
-    public Mono<List<UserRepresentation>> getAllUsersByUserName(String userName) {
+    public Mono<List<UserRepresentationDto>> getAllUsersByUserName(String userName) {
         MultiValueMap<String, String> options = new LinkedMultiValueMap<>();
         options.add("username", userName);
 
@@ -41,6 +66,6 @@ public class KeyCloakService {
                 .uri(uriBuilder -> uriBuilder.path(USER_URI).queryParams(options).build())
                 .retrieve()
                 .onStatus(HttpStatus::isError, ExceptionUtils::throwException)
-                .bodyToMono(new ParameterizedTypeReference<List<UserRepresentation>>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<UserRepresentationDto>>() {});
     }
 }

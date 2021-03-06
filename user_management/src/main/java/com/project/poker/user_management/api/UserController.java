@@ -1,7 +1,7 @@
 package com.project.poker.user_management.api;
 
 import com.project.poker.user_management.infrastructure.keycloak.KeyCloakService;
-import com.project.poker.user_management.infrastructure.keycloak.UserRepresentation;
+import com.project.poker.user_management.api.model.UserRepresentationDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +16,8 @@ public class UserController {
     private final KeyCloakService keyCloakService;
 
     @PostMapping(REGISTER_USER_URI)
-    public Mono<Void> registerUser(@RequestBody UserRepresentation userRepresentation) {
-        return keyCloakService.createUser(userRepresentation);
+    public Mono<Void> registerUser(@RequestBody UserRepresentationDto userRepresentationDto) {
+        return keyCloakService.createUser(userRepresentationDto);
     }
 
 }
