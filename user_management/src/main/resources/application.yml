@@ -31,7 +31,7 @@ spring:
       pool-name: UserManagementDatabasePool
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/deck_management
+    url: jdbc:postgresql://localhost:5432/user_management
     username: user_management
     password: user_management
   jpa:
@@ -44,6 +44,12 @@ keycloak:
   connectionConnectTimeoutSec: 5
   connectionReadTimeoutSec: 5
   idleTimeoutSec: 15
+
+flyway:
+  url: jdbc:postgresql://localhost:5432/user_management
+  schemas: user_management
+  user: "user_management"
+  password: "user_management"
 
 logging:
   level:

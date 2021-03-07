@@ -2,7 +2,10 @@ package com.project.poker.user_management.infrastructure.keycloak;
 
 import com.project.poker.user_management.api.model.UserRepresentationDto;
 import com.project.poker.user_management.application.exception.ExceptionUtils;
+import com.project.poker.user_management.application.exception.UserAlreadyRegisteredException;
+import com.project.poker.user_management.application.mapper.UserMapper;
 import com.project.poker.user_management.application.mapper.UserRepresentationMapper;
+import com.project.poker.user_management.application.services.UserService;
 import com.project.poker.user_management.infrastructure.keycloak.model.UpdateUserCommand;
 import com.project.poker.user_management.infrastructure.keycloak.model.UserRepresentation;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +30,13 @@ public class KeyCloakService {
     private static final String SET_PASSWORD_URI = "/users/{userId}/reset-password";
 
     private final WebClient keyCloakWebClient;
+    private final UserService userService;
 
     public Mono<Void> createUser(UserRepresentationDto userRepresentationDto) {
+        if (userService.findUserByUserName(userRepresentationDto.getUsername()).isPresent()) {
+            throw new UserAlreadyRegisteredException("User with username " +
+                    userRepresentationDto.getUsername() + " already registered" );
+        }
 
         UserRepresentation userRepresentation = UserRepresentationMapper.toUserRepresentation(userRepresentationDto);
         UpdateUserCommand updateUserCommand = UpdateUserCommand
@@ -36,6 +44,8 @@ public class KeyCloakService {
 
         return postUserToKeyCloak(userRepresentation)
                 .then(Mono.defer(() -> getAllUsersByUserName(userRepresentation.getUsername())
+                                        .doOnNext(users -> userService.saveUser(UserMapper
+                                                .fromUserRepresentation(users.get(0))))
                                         .flatMap(users -> updatePassword(updateUserCommand,
                                                 users.get(0).getId()))));
     }
