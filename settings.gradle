@@ -1,3 +1,4 @@
 rootProject.name = 'poker-backend'
 include 'deck_management'
 include 'user_management'
+include 'common-lib'
