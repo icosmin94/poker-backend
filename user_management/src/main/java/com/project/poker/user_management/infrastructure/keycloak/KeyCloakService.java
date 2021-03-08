@@ -1,8 +1,8 @@
 package com.project.poker.user_management.infrastructure.keycloak;
 
+import com.project.poker.commonlib.exception.ExceptionUtils;
+import com.project.poker.commonlib.exception.UserAlreadyRegisteredException;
 import com.project.poker.user_management.api.model.UserRepresentationDto;
-import com.project.poker.user_management.application.exception.ExceptionUtils;
-import com.project.poker.user_management.application.exception.UserAlreadyRegisteredException;
 import com.project.poker.user_management.application.mapper.UserMapper;
 import com.project.poker.user_management.application.mapper.UserRepresentationMapper;
 import com.project.poker.user_management.application.services.UserService;

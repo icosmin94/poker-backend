@@ -1,4 +1,4 @@
-package com.project.poker.user_management.application.exception;
+package com.project.poker.commonlib.exception;
 
 public class KeyCloakException extends RuntimeException {
     public KeyCloakException(String message) {

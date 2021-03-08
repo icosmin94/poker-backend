@@ -1,4 +1,4 @@
-package com.project.poker.user_management.application.exception;
+package com.project.poker.commonlib.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.ClientResponse;
