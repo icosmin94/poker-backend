@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework:spring-web:5.3.3'
     implementation 'org.springframework:spring-webflux:5.2.3.RELEASE'
-    implementation 'io.projectreactor:reactore-core:3.3.2.RELEASE'
+    implementation 'io.projectreactor:reactor-core:3.3.2.RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

@@ -4,7 +4,6 @@ import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerCodecConfigurer;
@@ -15,7 +14,6 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-@Order(-2)
 public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
 
     public GlobalErrorWebExceptionHandler(ErrorAttributes errorAttributes,
@@ -51,7 +49,7 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
                 exceptionHandler = GlobalExceptionHandler.class.getDeclaredMethod("handleException", Exception.class);
             }
 
-            ResponseEntity<BackendError> errorResponse = (ResponseEntity<BackendError>)
+            ResponseEntity<BackendErrorResponse> errorResponse = (ResponseEntity<BackendErrorResponse>)
                     exceptionHandler.invoke(null, exception);
 
             return ServerResponse.status(errorResponse.getStatusCode())

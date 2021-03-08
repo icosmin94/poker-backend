@@ -6,12 +6,14 @@ import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
 
 @Configuration
 public class ExceptionConfiguration {
 
     @Bean
+    @Order(-2)
     public GlobalErrorWebExceptionHandler globalErrorWebExceptionHandler(ErrorAttributes errorAttributes,
                                                                          ResourceProperties resourceProperties,
                                                                          ApplicationContext applicationContext,
