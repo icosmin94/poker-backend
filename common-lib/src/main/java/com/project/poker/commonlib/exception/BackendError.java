@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 public enum BackendError {
 
     DEFAULT(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error"),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "Pass error");
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "Pass error"),
+    KEY_CLOAK_EXCEPTION(HttpStatus.BAD_REQUEST, "Authorization Exception"),
+    USER_ALREADY_REGISTERED_EXCEPTION(HttpStatus.BAD_REQUEST, "User already registered");
 
     private HttpStatus status;
     private String errorMessage;

@@ -15,5 +15,28 @@ public class GlobalExceptionHandler {
                 .body(BackendErrorResponse.anErrorResponse(BackendError.BAD_REQUEST.name(), e.getMessage()));
     }
 
+    public static ResponseEntity<BackendErrorResponse> handleException(Exception e) {
+
+        log.error(e.getMessage(), e);
+        return ResponseEntity
+                .status(BackendError.DEFAULT.getStatus())
+                .body(BackendErrorResponse.anErrorResponse(BackendError.DEFAULT));
+    }
+
+    public static ResponseEntity<BackendErrorResponse> handleUserAlreadyRegisteredException(UserAlreadyRegisteredException e) {
+
+        log.error(e.getMessage(), e);
+        return ResponseEntity
+                .status(BackendError.USER_ALREADY_REGISTERED_EXCEPTION.getStatus())
+                .body(BackendErrorResponse.anErrorResponse(BackendError.USER_ALREADY_REGISTERED_EXCEPTION));
+    }
+
+    public static ResponseEntity<BackendErrorResponse> handleKeyCloakException(KeyCloakException e) {
+
+        log.error(e.getMessage(), e);
+        return ResponseEntity
+                .status(BackendError.DEFAULT.getStatus())
+                .body(BackendErrorResponse.anErrorResponse(BackendError.DEFAULT.name(), e.getMessage()));
+    }
 
 }
