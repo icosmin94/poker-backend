@@ -1,2 +1,14 @@
 server:
   port: 8085
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-management
+          uri: http://localhost:8101
+          predicates:
+            - Path=/user-management/**
+        - id: deck-management
+          uri: http://localhost:8100
+          predicates:
+            - Path=/deck-management/**
