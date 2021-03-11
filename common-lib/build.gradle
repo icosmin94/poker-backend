@@ -37,6 +37,9 @@ dependencies {
     implementation 'org.springframework:spring-web:5.3.3'
     implementation 'org.springframework:spring-webflux:5.2.3.RELEASE'
     implementation 'io.projectreactor:reactor-core:3.3.2.RELEASE'
+    implementation 'org.springframework.security:spring-security-core:5.4.2'
+    implementation 'org.springframework.security:spring-security-config:5.4.2'
+    implementation 'org.springframework.security:spring-security-oauth2-jose:5.4.2'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

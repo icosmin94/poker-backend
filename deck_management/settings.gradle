@@ -1,1 +1,3 @@
 rootProject.name = 'deck_management'
+include ":common-lib"
+project(":common-lib").setProjectDir(file('../common-lib'));

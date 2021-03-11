@@ -1,5 +1,6 @@
 package com.project.poker.deck_management.application.config;
 
+import com.project.poker.commonlib.security.jwt.CustomJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -18,8 +19,14 @@ public class SecurityConfig {
                 .authorizeExchange(exchanges -> exchanges
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(withDefaults())
+                        .jwt()
+                        .jwtAuthenticationConverter(customJwtAuthenticationConverter())
                 );
         return http.build();
+    }
+
+    @Bean
+    CustomJwtAuthenticationConverter customJwtAuthenticationConverter(){
+        return new CustomJwtAuthenticationConverter();
     }
 }
