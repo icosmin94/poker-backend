@@ -1,0 +1,38 @@
+server:
+  port: 8102
+  servlet:
+    context-path: /table-management
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/auth/realms/poker_backend/protocol/openid-connect/certs
+
+  datasource:
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 30
+      idle-timeout: 6000011
+      minimum-idle: 10
+      pool-name: UserManagementDatabasePool
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/table_management
+    username: table_management
+    password: table_management
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+flyway:
+  url: jdbc:postgresql://localhost:5432/table_management
+  schemas: table_management
+  user: "table_management"
+  password: "table_management"
+
+logging:
+  level:
+    org.springframework.web.reactive.function.client.ExchangeFunctions: TRACE
+    reactor.netty.http.client: DEBUG
