@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PokerTableService {
@@ -17,4 +19,9 @@ public class PokerTableService {
     public Page<PokerTable> getPokerTablePage(Pageable pageRequest) {
         return pokerTableRepository.findAll(pageRequest);
     }
+
+    public List<PokerTable> getAllPokerTables() {
+        return pokerTableRepository.findAll();
+    }
 }
+
