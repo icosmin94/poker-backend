@@ -2,7 +2,15 @@ server:
   port: 8100
   servlet:
     context-path: /deck-management
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
 spring:
+  application:
+    name: deck_management
   security:
     oauth2:
       resourceserver:
