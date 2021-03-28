@@ -16,6 +16,12 @@ group = 'com.project.poker'
 version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '11'
 
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:2.4.2"
+    }
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
