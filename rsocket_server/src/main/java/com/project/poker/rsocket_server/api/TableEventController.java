@@ -4,6 +4,7 @@ import com.project.poker.commonlib.security.UserDetails;
 import com.project.poker.rsocket_server.application.service.TableConnectionHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,21 +28,22 @@ public class TableEventController {
         log.info("Shutting down.");
     }
 
-    @ConnectMapping({"table-connection"})
-    void connectToTableEventStream(RSocketRequester requester, @AuthenticationPrincipal UserDetails userDetails) {
+    @ConnectMapping("table-connection.{tableId}")
+    void connectToTableEventStream(RSocketRequester requester, @AuthenticationPrincipal UserDetails userDetails,
+                                   @DestinationVariable("tableId") String tableId) {
 
         requester.rsocket()
                 .onClose()
                 .log()
                 .doFirst(() -> {
                     log.info("Client: {} CONNECTED.", userDetails.getUserId());
-                    tableConnectionHandlerService.addRequester(userDetails, requester);
+                    tableConnectionHandlerService.addRequester(userDetails, tableId, requester);
                 })
                 .doOnError(error -> {
                     log.warn("Channel to client {} CLOSED", userDetails.getUserId());
                 })
                 .doFinally(consumer -> {
-                    tableConnectionHandlerService.removeRequester(userDetails, requester);
+                    tableConnectionHandlerService.removeRequester(userDetails, tableId, requester);
                     log.info("Client {} DISCONNECTED", userDetails.getUserId());
                 })
                 .subscribe();
