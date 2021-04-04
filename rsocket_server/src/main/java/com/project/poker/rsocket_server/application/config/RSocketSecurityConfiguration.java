@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.ReactiveAdapterRegistry;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
 import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtReactiveAuthenticationManager;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
+import reactor.core.publisher.Mono;
 
 @Configuration
 @EnableRSocketSecurity
@@ -64,5 +66,10 @@ public class RSocketSecurityConfiguration {
     @Bean
     CustomJwtAuthenticationConverter customJwtAuthenticationConverter(){
         return new CustomJwtAuthenticationConverter();
+    }
+
+    @MessageExceptionHandler
+    public Mono<Object> handleException(Exception e) {
+        return Mono.just(null);
     }
 }

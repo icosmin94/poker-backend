@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.project.poker.commonlib.security.UserDetails;
 import com.project.poker.rsocket_server.application.model.ClientTableKey;
+import lombok.Getter;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class TableConnectionHandlerService {
 
     private final Multimap<ClientTableKey, RSocketRequester> clientTableMap = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
+    @Getter
     private final Multimap<String, RSocketRequester> tableMap = Multimaps.synchronizedMultimap(LinkedHashMultimap.create());
 
     public void closeAllConnections() {
@@ -29,4 +31,5 @@ public class TableConnectionHandlerService {
         clientTableMap.remove(ClientTableKey.of(userDetails.getUserId(), tableId), requester);
         tableMap.values().remove(requester);
     }
+
 }
