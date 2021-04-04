@@ -1,47 +1,48 @@
 package com.project.poker.rsocket_server.api;
 
-import com.nimbusds.jwt.JWT;
 import com.project.poker.commonlib.security.UserDetails;
+import com.project.poker.rsocket_server.application.service.TableConnectionHandlerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.messaging.rsocket.annotation.ConnectMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 import javax.annotation.PreDestroy;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class TableEventController {
 
-    private final Map<String, RSocketRequester> clientsMap = new HashMap<>();
+
+    private final TableConnectionHandlerService tableConnectionHandlerService;
+
 
     @PreDestroy
     void shutdown() {
         log.info("Detaching all remaining clients...");
-        clientsMap.values().forEach(requester -> requester.rsocket().dispose());
+        tableConnectionHandlerService.closeAllConnections();
         log.info("Shutting down.");
     }
 
     @ConnectMapping({"table-connection"})
-    void connectToTableEventStream(RSocketRequester requester, @AuthenticationPrincipal Object object) {
+    void connectToTableEventStream(RSocketRequester requester, @AuthenticationPrincipal UserDetails userDetails) {
 
         requester.rsocket()
                 .onClose()
                 .log()
                 .doFirst(() -> {
-                    log.info("Client: {} CONNECTED.", "gigi");
-                    clientsMap.put("gigi", requester);
+                    log.info("Client: {} CONNECTED.", userDetails.getUserId());
+                    tableConnectionHandlerService.addRequester(userDetails, requester);
                 })
                 .doOnError(error -> {
-                    log.warn("Channel to client {} CLOSED", "gigi");
+                    log.warn("Channel to client {} CLOSED", userDetails.getUserId());
                 })
                 .doFinally(consumer -> {
-                    clientsMap.put("gigi", requester);
-                    log.info("Client {} DISCONNECTED", "gigi");
+                    tableConnectionHandlerService.removeRequester(userDetails, requester);
+                    log.info("Client {} DISCONNECTED", userDetails.getUserId());
                 })
                 .subscribe();
     }

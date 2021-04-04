@@ -40,7 +40,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-core:5.4.2'
     implementation 'org.springframework.security:spring-security-config:5.4.2'
     implementation 'org.springframework.security:spring-security-oauth2-jose:5.4.2'
-
+    implementation 'com.google.guava:guava:19.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

@@ -39,6 +39,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-jose'
     implementation 'org.springframework.security:spring-security-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-messaging'
+    implementation 'com.google.guava:guava:19.0'
 
     implementation project(":common-lib")
     compileOnly 'org.projectlombok:lombok'
