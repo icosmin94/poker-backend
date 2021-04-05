@@ -1,5 +1,7 @@
 package com.project.poker.rsocket_server.application.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Multimap;
 import com.project.poker.commonlib.model.CardColor;
 import com.project.poker.commonlib.model.CardFlopEvent;
@@ -21,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class CardSendExample implements CommandLineRunner {
 
     private final TableConnectionHandlerService tableConnectionHandlerService;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,9 +40,15 @@ public class CardSendExample implements CommandLineRunner {
                 log.info(cardFlopEvent.toString());
                 position.set((position.get() + 1) % 5);
                 tableMap.get(table).forEach(rSocketRequester -> {
-                    rSocketRequester.rsocket().fireAndForget(DefaultPayload.create(cardFlopEvent.toString()))
-                            .log()
-                            .subscribe();
+                    try {
+                        rSocketRequester
+                                .route("say.hello")
+                                .data(objectMapper.writeValueAsString(cardFlopEvent))
+                                .send()
+                                .subscribe();
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
             });
         }
