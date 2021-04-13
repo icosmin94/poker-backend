@@ -11,14 +11,26 @@ spring:
     gateway:
       routes:
         - id: user-management
-          uri: lb://user_management:8101
+          uri: lb://user_management
           predicates:
             - Path=/user-management/**
         - id: deck-management
-          uri: lb://deck_management:8100
+          uri: lb://deck_management
           predicates:
             - Path=/deck-management/**
         - id: table-management
-          uri: lb://table_management:8102
+          uri: lb://table_management
           predicates:
             - Path=/table-management/**
+        - id: rsocket_server
+          uri: lb:ws://rsocket-server:7000
+          predicates:
+            - Path=/rsocket**
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE

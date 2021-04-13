@@ -1,0 +1,18 @@
+spring:
+  rsocket:
+    server:
+      port: 7000
+      transport: websocket
+  application:
+    name: rsocket-server
+  main:
+    web-application-type: none
+oath2:
+  issuer:
+    location: http://localhost:8080/auth/realms/poker_backend
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 7000

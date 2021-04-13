@@ -12,6 +12,10 @@ buildscript{
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'java'
 
+ext {
+    set('springCloudVersion', "2020.0.0")
+}
+
 group = 'com.project.poker'
 version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '11'
@@ -19,6 +23,7 @@ sourceCompatibility = '11'
 dependencyManagement {
     imports {
         mavenBom "org.springframework.boot:spring-boot-dependencies:2.4.2"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
@@ -40,6 +45,7 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-resource-server'
     implementation 'org.springframework.security:spring-security-messaging'
     implementation 'com.google.guava:guava:19.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     implementation project(":common-lib")
     compileOnly 'org.projectlombok:lombok'
