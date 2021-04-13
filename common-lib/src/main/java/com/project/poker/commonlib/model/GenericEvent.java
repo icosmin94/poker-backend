@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardFlopEvent {
-    private String cardName;
-    private Integer cardPosition;
+public class GenericEvent<T> {
+    Long timeStamp;
+    EventName eventName;
+    T payload;
 }
