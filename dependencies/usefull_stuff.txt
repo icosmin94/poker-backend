@@ -1,0 +1,43 @@
+@Log4j
+public class CustomAvroDeserializer extends KafkaAvroDeserializer {
+
+  @Override
+  public Object deserialize(String s, byte[] bytes) {
+    try {
+      return this.deserialize(bytes);
+    } catch (Exception e) {
+      log.error("encounter a problem when deserializer message with schema registry:{}", e);
+      return null;
+    }
+  }
+}
+
+@Slf4j
+public class KafkaConsumerErrorHandler extends SeekToCurrentErrorHandler {
+
+    KafkaConsumerErrorHandler() {
+        super(new FixedBackOff(0L, 0L));
+    }
+
+    @Override
+    public void handle(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, MessageListenerContainer container) {
+        if (thrownException.getMessage() != null &&
+                thrownException.getMessage().contains("Error deserializing key/value for partition")){
+            String message = thrownException.getMessage().split("Error deserializing key/value for partition ")[1]
+                    .split(". If needed, please seek past the record to continue consumption.")[0];
+            String topics = message.split("-")[0];
+            long offset = Long.parseLong(message.split("offset ")[1]);
+            int partition = Integer.parseInt(message.split("-")[1].split(" at")[0]);
+
+            TopicPartition topicPartition = new TopicPartition(topics, partition);
+            consumer.seek(topicPartition, offset + 1);
+            log.warn("Ignore message because of error: {}", thrownException.getMessage());
+        } else {
+            ConsumerRecord<?, ?> record = records.get(0);
+            log.warn("Exception occurred handling record {}.", record);
+            setCommitRecovered(true);
+            super.handle(thrownException, records, consumer, container);
+            log.info(String.format("Acknowledged error record offset=%d partition=%d topic=%s", record.offset(), record.partition(), record.topic()));
+        }
+    }
+}

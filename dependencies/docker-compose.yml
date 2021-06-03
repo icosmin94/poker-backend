@@ -16,7 +16,7 @@ services:
     image: confluentinc/cp-kafka
     container_name: kafka-1
     depends_on:
-      - zookeeper
+      - "zookeeper"
     volumes:
       - kafka-1:/var/lib/kafka/data
     networks:
@@ -29,14 +29,10 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092
   kafka-2:
-    image: confluentinc/cp-kafka
+    <<: *kafka
     container_name: kafka-2
-    depends_on:
-      - "zookeeper"
     volumes:
       - kafka-2:/var/lib/kafka/data
-    networks:
-      - poker-backend
     ports:
       - 29093:29093
     environment:
@@ -56,6 +52,7 @@ services:
       KAFKA_BROKER_ID: 3
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29094
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29094
+
 #  postgres:
 #    image: postgres
 #    container_name: postgres
